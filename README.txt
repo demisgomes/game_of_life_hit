@@ -10,7 +10,14 @@ In the game:
 Press A to fill the board randomly;
 Press SPACE to start the game;
 Press Q to manually give the next step;
-Click on a black square to make it alive
+Click on a black square to make it infected
+
+
+Change the values of variables
+SINGER_POPULARITY
+MEDIA_DIVULGATION
+
+in range 1...10  in GameOfLife.py to modify contamination and cure rates
 
 Based on http://www.pygame.org/project-John+Conway%27s+Game+of+Life-2899-.html, with optimizations and corrections
 
