@@ -5,7 +5,7 @@ from Compartment import Compartment
 #This class builds the board, inserting cells according to configurations defined by parameters
 class board:
 
-	def __init__(self, map_size, img_alive, img_dead, square_size, number_generations_to_be_recovered, number_generations_to_be_infected, quantity_cells_around):
+	def __init__(self, map_size, img_alive, img_dead, square_size, number_generations_to_be_recovered, number_generations_to_be_infected, quantity_cells_around, img_recovered):
 		self.map = []
 		self.map_size=map_size
 		self.alive=img_alive
@@ -14,6 +14,7 @@ class board:
 		self.number_generations_to_be_recovered=number_generations_to_be_recovered
 		self.number_generations_to_be_infected=number_generations_to_be_infected
 		self.quantity_cells_around=quantity_cells_around
+		self.recovered=img_recovered
 
 	def fill(self,ran):
 		for i in xrange(self.map_size):
@@ -35,8 +36,10 @@ class board:
 				loc = cell.location
 				if cell.alive == Compartment.infected: 
 					screen.blit(self.alive,(loc[0]*self.square_size,loc[1]*self.square_size))
-				else: 
+				elif cell.alive == Compartment.susceptible: 
 					screen.blit(self.dead,(loc[0]*self.square_size,loc[1]*self.square_size))
+				else:
+					screen.blit(self.recovered,(loc[0]*self.square_size,loc[1]*self.square_size))
 
 	def get_cells(self, cell):# gets the cells around a cell
 		cells_around = []
@@ -74,14 +77,22 @@ class board:
 		#If cell is alive, it continues alive if double minus 4 is greater than 5
 		#If cell is dead, it turns alive if 3 or 6 cells around it are alive or has 8 cells around it
 		if cell.alive == Compartment.infected:
-			if (cells_alive *2 -4)>5:
-				cell.to_be = Compartment.infected
+			cell.generations_remaining_to_cure-=1
+			if cell.generations_remaining_to_cure==0:
+				cell.to_be = Compartment.recovered
+			#TODO: adding repeat in else, reseting generations
+			else:
+				cell.to_be=Compartment.infected
+		elif cell.alive == Compartment.susceptible:
+			if(cells_alive >= self.quantity_cells_around):
+				cell.generations_remaining_to_infection-=1
+				if cell.generations_remaining_to_infection==0:
+					cell.to_be = Compartment.infected
+			#TODO: adding repeat in else, reseting generations
 			else:
 				cell.to_be=Compartment.susceptible
-
-		else:
-			if cells_alive %3 == 0 or len(cells_around)-2>6: cell.to_be = Compartment.infected
-							  #rules
+						
+			
 	def update_frame(self):
 		for i in xrange(self.map_size):
 			for g in xrange(self.map_size):
@@ -97,8 +108,10 @@ class board:
 					cell.alive = cell.to_be
 				if self.map[i][g].alive == Compartment.infected:
 					 screen.blit(self.alive,(loc[0]*self.square_size,loc[1]*self.square_size))
-				else: 
+				elif self.map[i][g].alive== Compartment.susceptible: 
 					screen.blit(self.dead,(loc[0]*self.square_size,loc[1]*self.square_size))
+				else:
+					screen.blit(self.recovered,(loc[0]*self.square_size,loc[1]*self.square_size))
 				cell.to_be = None
 
 
