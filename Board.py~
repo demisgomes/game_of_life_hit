@@ -73,6 +73,9 @@ class board:
 		for i in cells_state:# cells_alive houses how many cells are alive around it
 			if i == Compartment.infected:
 				 cells_alive+=1
+		#The rules are the following:
+		#If cell is alive, it continues alive if double minus 4 is greater than 5
+		#If cell is dead, it turns alive if 3 or 6 cells around it are alive or has 8 cells around it
 		if cell.alive == Compartment.infected:
 			cell.generations_remaining_to_cure-=1
 			if cell.generations_remaining_to_cure==0:
