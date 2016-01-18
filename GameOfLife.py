@@ -3,6 +3,7 @@ import pygame,random
 from pygame.locals import *
 from Cell import cell
 from Board import board 
+from Compartment import Compartment
 
 pygame.init()
 
@@ -11,17 +12,17 @@ squares = 2 # size of squares: 0 = 8X8, 1 = 16X16, 2 = 32X32, 3 = 64X64
 map_size = 20 # the width and height
 
 if squares == 0:
-	imgs = ["res/alive_8.png","res/dead_8.png",8]
+	imgs = ["res/infected_8.png","res/susceptible_8.png",8]
 elif squares == 1:
-	imgs = ["res/alive_16.png","res/dead_16.png",16]
+	imgs = ["res/infected_16.png","res/susceptible_16.png",16]
 elif squares == 2:
-	imgs = ["res/alive_32.png","res/dead_32.png",32]
+	imgs = ["res/infected_32.png","res/susceptible_32.png",32]
 elif squares == 3:
-	imgs = ["res/alive_64.png","res/dead_64.png",64]
+	imgs = ["res/infected_64.png","res/susceptible_64.png",64]
 
 #If other value different than 0,1,2,3,4 inserted, the default value is 8 
 else:
-	imgs=["res/alive_8.png","res/dead_8.png",8]
+	imgs=["res/infected_8.png","res/susceptible_8.png",8]
 #-----CONFIG-----
 
 #screen size
@@ -37,6 +38,20 @@ clock = pygame.time.Clock()
 img_alive = pygame.image.load(imgs[0]).convert()
 img_dead = pygame.image.load(imgs[1]).convert()
 done = False
+
+#constants required to calculate contact and infectious rates
+#range 0...10
+SINGER_POPULARITY=1
+MEDIA_DIVULGATION=5
+
+#variables that will be calculated from by constants
+quantity_cells_around=0
+number_generations_to_be_infected=0
+number_generations_to_be_recovered=0 
+
+#formula rates
+contact_rate=0
+recovery_rate=0
 
 def cell_list():
     lst = []
@@ -106,7 +121,7 @@ while done == False:
 		for i in xrange(map_size):
 			for g in xrange(map_size):
 				if pos[0] >= rects[i][g][0] and pos[0] < rects[i][g][0]+square_size and pos[1] >= rects[i][g][1] and pos[1] < rects[i][g][1]+square_size and board.map[i][g].pressed == False:
-					board.map[i][g].alive = True
+					board.map[i][g].alive = Compartment.infected
 					board.map[i][g].pressed = True
 					board.update(screen)
 
@@ -115,7 +130,7 @@ while done == False:
 		for i in xrange(map_size):
 			for g in xrange(map_size):
 				if pos[0] >= rects[i][g][0] and pos[0] < rects[i][g][0]+square_size and pos[1] >= rects[i][g][1] and pos[1] < rects[i][g][1]+square_size and board.map[i][g].pressed == False:
-					board.map[i][g].alive = False
+					board.map[i][g].alive = Compartment.susceptible
 					board.map[i][g].pressed = False
 					board.update(screen)
 

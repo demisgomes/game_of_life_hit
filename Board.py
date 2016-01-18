@@ -1,6 +1,7 @@
 from Cell import cell
 from collections import OrderedDict
 import random
+from Compartment import Compartment
 #This class builds the board, inserting cells according to configurations defined by parameters
 class board:
 
@@ -18,7 +19,7 @@ class board:
 				if ran == True:
 					a = random.randint(0,4)
 					if a == 0: 
-						self.map[i].insert(g,cell((i,g),True))
+						self.map[i].insert(g,cell((i,g),Compartment.infected))
 					else: 
 						self.map[i].insert(g,cell((i,g)))	
 				else: 
@@ -29,7 +30,7 @@ class board:
 			for g in xrange(self.map_size):
 				cell = self.map[i][g]
 				loc = cell.location
-				if cell.alive == True: 
+				if cell.alive == Compartment.infected: 
 					screen.blit(self.alive,(loc[0]*self.square_size,loc[1]*self.square_size))
 				else: 
 					screen.blit(self.dead,(loc[0]*self.square_size,loc[1]*self.square_size))
@@ -64,19 +65,19 @@ class board:
 		for i in xrange(len(cells_around)): 
 			cells_state.append(self.map[cells_around[i][0]][cells_around[i][1]].alive)
 		for i in cells_state:# cells_alive houses how many cells are alive around it
-			if i == True:
+			if i == Compartment.infected:
 				 cells_alive+=1
 		#The rules are the following:
 		#If cell is alive, it continues alive if double minus 4 is greater than 5
 		#If cell is dead, it turns alive if 3 or 6 cells around it are alive or has 8 cells around it
-		if cell.alive == True:
+		if cell.alive == Compartment.infected:
 			if (cells_alive *2 -4)>5:
-				cell.to_be = True
+				cell.to_be = Compartment.infected
 			else:
-				cell.to_be=False
+				cell.to_be=Compartment.susceptible
 
 		else:
-			if cells_alive %3 == 0 or len(cells_around)-2>6: cell.to_be = True
+			if cells_alive %3 == 0 or len(cells_around)-2>6: cell.to_be = Compartment.infected
 							  #rules
 	def update_frame(self):
 		for i in xrange(self.map_size):
@@ -91,7 +92,7 @@ class board:
 				loc = cell.location
 				if cell.to_be != None: 
 					cell.alive = cell.to_be
-				if self.map[i][g].alive == True:
+				if self.map[i][g].alive == Compartment.infected:
 					 screen.blit(self.alive,(loc[0]*self.square_size,loc[1]*self.square_size))
 				else: 
 					screen.blit(self.dead,(loc[0]*self.square_size,loc[1]*self.square_size))
