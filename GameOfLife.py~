@@ -58,9 +58,6 @@ quantity_cells_around=int(round((MEDIA_DIVULGATION*5+SINGER_POPULARITY*3)/10))
 number_generations_to_be_recovered=int(round((MEDIA_DIVULGATION*4+SINGER_POPULARITY*2)/10))
 number_generations_to_be_infected=int(round(6/number_generations_to_be_recovered))
 
-print number_generations_to_be_recovered
-print number_generations_to_be_infected
-
 def cell_list():
     lst = []
     for i in xrange(map_size):

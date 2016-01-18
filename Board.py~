@@ -24,9 +24,9 @@ class board:
 					if a == 0: 
 						self.map[i].insert(g,cell((i,g),Compartment.infected, self.number_generations_to_be_recovered, self.number_generations_to_be_infected))
 					else: 
-						self.map[i].insert(g,cell((i,g), Compartment.susceptible,self.number_generations_to_be_recovered, self.number_generations_to_be_infected))	
+						self.map[i].insert(g,cell((i,g),self.number_generations_to_be_recovered, self.number_generations_to_be_infected))	
 				else: 
-					self.map[i].insert(g,cell((i,g),Compartment.susceptible,self.number_generations_to_be_recovered, self.number_generations_to_be_infected))					
+					self.map[i].insert(g,cell((i,g),self.number_generations_to_be_recovered, self.number_generations_to_be_infected))					
 
 	def draw(self, screen):
 		for i in xrange(self.map_size):

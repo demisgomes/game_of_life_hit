@@ -11,7 +11,7 @@ class cell:
 		self.alive = alive
 		self.pressed = False
 		self.location = location
-		self.generations_remaining_to_cure=to_cure
-		self.generations_remaining_to_infection=to_infection
+		self.generations_remaining_to_cure=0
+		self.generations_remaining_to_infection=0
 
 
