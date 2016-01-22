@@ -7,7 +7,12 @@ from Compartment import Compartment
 
 pygame.init()
 
-speed = 3 # how many iterations per second
+#constants required to calculate contact and infectious rates
+#range 1...10
+SINGER_POPULARITY=1
+MEDIA_DIVULGATION=2
+
+speed = 1 # how many iterations per second
 squares = 1 # size of squares: 0 = 8X8, 1 = 16X16, 2 = 32X32, 3 = 64X64
 map_size = 60 # the width and height
 
@@ -40,10 +45,6 @@ img_dead = pygame.image.load(imgs[1]).convert()
 img_recovered=pygame.image.load(imgs[2]).convert()
 done = False
 
-#constants required to calculate contact and infectious rates
-#range 1...10
-SINGER_POPULARITY=5
-MEDIA_DIVULGATION=5
 
 #variables that will be calculated from by constants
 quantity_cells_around=0
@@ -53,6 +54,12 @@ number_generations_to_be_recovered=0
 #formula rates
 contact_rate=0
 recovery_rate=0
+
+#Contact and recovery rates will be used to probability of infection and cure, respectively
+contact_rate=(((3*SINGER_POPULARITY)+(5*MEDIA_DIVULGATION))/114.28571428571429) + ((3*SINGER_POPULARITY+5*MEDIA_DIVULGATION)/400.0)
+recovery_rate=0.1/(contact_rate*7)
+
+print contact_rate, recovery_rate
 
 #calculus
 quantity_cells_around=int(round(66.0/(MEDIA_DIVULGATION*5+SINGER_POPULARITY*3)))
@@ -67,7 +74,7 @@ def cell_list():
 		lst[i].append((board.map[i][g].location[0]*square_size,board.map[i][g].location[1]*square_size))
     return lst
 
-board = board(map_size, img_alive, img_dead, square_size, number_generations_to_be_recovered, number_generations_to_be_infected, quantity_cells_around, img_recovered)
+board = board(map_size, img_alive, img_dead, square_size, number_generations_to_be_recovered, number_generations_to_be_infected, quantity_cells_around, img_recovered, contact_rate, recovery_rate)
 board.fill(False)
 board.draw(screen)  
 tp = 0
